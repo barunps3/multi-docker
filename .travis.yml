@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before install:
+  - docker build -t barunps3/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true barunps3/react-test npm test
+
+after_success:
+  - docker build -t barunps3/multi-client ./client
+  - docker build -t barunps3/multi-nginx ./nginx
+  - docker build -t barunps3/multi-server ./server
+  - docker build -t barunps3/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push barunps3/multi-client
+  - docker push barunps3/multi-nginx
+  - docker push barunps3/multi-server
+  - docker push barunps3/multi-worker
+
+# Log in to docker CLI
+
