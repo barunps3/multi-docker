@@ -20,6 +20,7 @@ after_success:
   - docker push barunps3/multi-worker
 
 deploy:
+  edge: true
   provider: elasticbeanstalk
   region: eu-central-1
   app: multi-docker
